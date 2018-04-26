@@ -1,0 +1,2 @@
+g++ -I/usr/local/include -O0 main.cpp /usr/local/lib/libpapi.a -o bincpp -fopenmp -O3
+./bincpp

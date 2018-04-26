@@ -1,0 +1,33 @@
+As pastas com o código encontram-se dentro da pasta "Source code".
+
+-> Programa em C#:
+Na pasta "C#", executar no terminal:
+
+sudo apt update
+sudo apt install mono-complete
+mcs -out:csbin.exe Matrix.cs
+mono csbin.exe
+
+-> Programa em C/C++:
+Na pasta "cpp", executar no terminal (para ver informação "usage" executar apenas ./bincpp):
+
+g++ -I/usr/local/include -O0 main.cpp /usr/local/lib/libpapi.a -o bincpp -fopenmp -O3
+./bincpp <operation> <size> <num_of_threads>
+
+-> Programa em Java:
+Na pasta "java", executar no terminal:
+
+javac Main.java
+java Main <operation> <size>
+operation: 1, 2 or 3
+size: matrix size
+
+operation 1 : performance of multiplication of NxN matrices (naive algorithm)
+operation 2 : performance of multiplication of NxN matrices (optimized algorithm)
+operation 3 : ratio betwen the two algorithms
+
+-> Programa em Python:
+Na pasta "python", executar no terminal:
+
+python "Source.py" <size>
+size: matrix size

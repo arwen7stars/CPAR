@@ -1,0 +1,8 @@
+javac Main.java
+java Main <operation> <size>
+operation: 1, 2 or 3
+size: matrix size
+
+operation 1 : performance of multiplication of NxN matrices (naive algorithm)
+operation 2 : performance of multiplication of NxN matrices (optimized algorithm)
+operation 3 : ratio betwen the two algorithms

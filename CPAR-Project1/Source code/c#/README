@@ -1,0 +1,4 @@
+sudo apt update
+sudo apt install mono-complete
+mcs -out:csbin.exe Matrix.cs
+mono csbin.exe
