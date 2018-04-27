@@ -271,7 +271,7 @@ int main(int argc, char* argv[]) {
 
         printf("Elapsed time: %f s\n", real_time);*/
     } else {
-        printf("usage: %s <size>\n", argv[0]);
+        printf("usage: %s <filename>\n", argv[0]);
         return EXIT_FAILURE;
     }
 }

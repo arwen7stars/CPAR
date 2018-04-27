@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 #include <mpi.h>
 
 #define MAXDIM 6000
@@ -54,7 +55,7 @@ char* remove_commas(char* str) {
 /*
     Reads the matrix that will be used in the LU decomposition algorithm
 */
-float** read_matrix_file(char* filename, int* dim) {
+float* read_matrix_file(char* filename, int* dim) {
     
     FILE *file = fopen(filename, "r");
     
@@ -78,12 +79,11 @@ float** read_matrix_file(char* filename, int* dim) {
                     } else {
                         array[i*tmp_dim + j] = (float)strtol(p, &p, 10);
                     }
-                    
+
+                    j++;                    
                     if(j > tmp_dim) {
                         tmp_dim = j;
                     }
-
-                    j++;
                 } else {                                        // Otherwise, move on to the next character.
                     p++;
                 }
@@ -209,20 +209,34 @@ void calculateRowLU(float **row, float *pivot_row, size_t dim)
 int main(int argc, char *argv[])
 {
    if (argc == 2) {
-       char *matrix_dim = argv[1];
-       char *ptr;
-       
-       srand(time(NULL));
-       
-       int dim = strtol(matrix_dim, &ptr, 10);
+        srand(time(NULL));
+        
+        char* filename = argv[1];
+        int dim;
+        float* A = read_matrix_file(filename, &dim);
 
-       if (*ptr){
+	    if(A == NULL) {
+	        return EXIT_FAILURE;	
+	    }
+
+        float *L = initialize_matrix(dim * dim, dim, 0);
+        float *U = initialize_matrix(dim * dim, dim, 0);
+
+        /*char *matrix_dim = argv[1];
+        char *ptr;
+
+        srand(time(NULL));
+
+        int dim = strtol(matrix_dim, &ptr, 10);
+
+        if (*ptr){
             printf("Conversion error, non-convertible part: %s", ptr);
         }
 
         float *A = initialize_matrix(dim * dim, dim, 1);
         float *L = initialize_matrix(dim * dim, dim, 0);
         float *U = initialize_matrix(dim * dim, dim, 0);
+        */
 
         const int root_process = 0;
         int size, rank;
@@ -231,10 +245,10 @@ int main(int argc, char *argv[])
         MPI_Comm_size(MPI_COMM_WORLD, &size);
         MPI_Comm_rank(MPI_COMM_WORLD, &rank);
         
-        if (rank == root_process) {
-            /*printf("[A]\n");
-            print_matrix(A, dim * dim, dim);*/
-        }
+        /*if (rank == root_process) {
+            printf("[A]\n");
+            print_matrix(A, dim * dim, dim);
+        }*/
 
         int i;
         int main_elem;
@@ -263,6 +277,10 @@ int main(int argc, char *argv[])
         double end = MPI_Wtime();
         if(rank == root_process) {
             setLU(A, L, U, dim);
+
+            write_matrix(L, dim*dim, dim, "L.csv", 0);
+            write_matrix(U, dim*dim, dim, "U.csv", 0);
+
             /*printf("\n[L]\n");
             print_matrix(L, dim * dim, dim);
 
@@ -281,7 +299,7 @@ int main(int argc, char *argv[])
         MPI_Finalize();
         return EXIT_SUCCESS;
    } else {
-       printf("usage: %s <size>\n", argv[0]);
+       printf("usage: %s <filename>\n", argv[0]);
        return EXIT_FAILURE;
    }
 }
