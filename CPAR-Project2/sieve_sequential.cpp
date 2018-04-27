@@ -1,7 +1,27 @@
 #include <cmath>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <vector>
+
+void write_primes(std::vector<bool> prime_numbers, unsigned long long last_number) {
+	std::ofstream fout;
+	fout.open("primes.csv");
+	size_t counter = 1;
+
+    fout << 2 << ", ";
+	for(size_t i = 3; i < last_number; i+=2) {
+		if(!prime_numbers[i/2]) {
+			counter++;
+			fout << i << ", ";
+		}
+	}
+
+	fout.close();
+
+	std::cout << "Prime numbers found: " << counter << std::endl;
+
+}
 
 /*
 	"std::vector<bool> is a possibly space-efficient specialization of std::vector for the type bool."
@@ -27,18 +47,7 @@ void sieve(unsigned long long last_number) {
 		}
 	}
 
-	int counter = 1;
-	
-	//std::cout << 2 << ", ";
-	for(size_t i = 3; i < last_number; i+=2) {
-		if(!prime_numbers[i/2]) {
-			counter++;
-			//std::cout << i << ", ";
-		}
-	}
-	//std::cout << std::endl;
-
-	std::cout << "Prime numbers found: " << counter << std::endl;
+	write_primes(prime_numbers, last_number);
 }
 
 int main(int argc, char* argv[]) {

@@ -2,7 +2,27 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <fstream>
 #include <omp.h>
+
+void write_primes(bool prime_numbers[], unsigned long long last_number) {
+	std::ofstream fout;
+	fout.open("primes.csv");
+	size_t counter = 1;
+
+    fout << 2 << ", ";
+	for(size_t i = 3; i < last_number; i+=2) {
+		if(!prime_numbers[i/2]) {
+			counter++;
+			fout << i << ", ";
+		}
+	}
+
+	fout.close();
+
+	std::cout << "Prime numbers found: " << counter << std::endl;
+
+}
 
 void sieve(unsigned long long last_number) {
     bool* prime_numbers = new bool[last_number/2];      // all elements are set to false
@@ -22,16 +42,8 @@ void sieve(unsigned long long last_number) {
 		}
 	}
 
-    size_t counter = 1;
-    //cout << 2 << ", ";
-	for(size_t i = 3; i < last_number; i+=2) {
-		if(!prime_numbers[i/2]) {
-			counter++;
-			//std::cout << i << ", ";
-		}
-	}
+	write_primes(prime_numbers, last_number);
 
-	std::cout << "Prime numbers found: " << counter << std::endl;
     delete[] prime_numbers;
 }
 
@@ -52,6 +64,6 @@ int main(int argc, char* argv[]) {
 
 		std::cout << "Elapsed time: "<< real_time << "s" << std::endl;
     } else {
-        std::cout << "usage: "<< argv[0] << " <size>" << std::endl;
+        std::cout << "usage: "<< argv[0] << " <last_number>" << std::endl;
     }
 }
