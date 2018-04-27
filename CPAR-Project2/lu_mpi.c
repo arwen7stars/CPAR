@@ -4,6 +4,9 @@
 #include <time.h>
 #include <mpi.h>
 
+#define MAXDIM 6000
+
+// MATRIX FUNCTIONS ------------------------------------------------------------
 void print_matrix(float *matrix, size_t no_cells, size_t dim)
 {
     int i;
@@ -32,6 +35,99 @@ float* initialize_matrix(size_t no_cells, size_t dim, int random)
     return matrix;
 }
 
+
+/*
+    Auxiliar function to read_matrix_file
+*/
+char* remove_commas(char* str) {
+    char *r, *w;
+    for (w = r = str; *r; r++) {
+        if (*r != ',') {
+            *w++ = *r;
+        }
+    }
+    *w = '\0';
+
+    return str;
+}
+
+/*
+    Reads the matrix that will be used in the LU decomposition algorithm
+*/
+float** read_matrix_file(char* filename, int* dim) {
+    
+    FILE *file = fopen(filename, "r");
+    
+    if (file)
+    {
+        unsigned long i, j, k;
+        float* array = initialize_matrix(MAXDIM*MAXDIM, MAXDIM, 0);
+        char buffer[MAXDIM*1000], *ptr;
+        
+        int tmp_dim = -1;
+        for (i = 0; fgets(buffer, sizeof buffer, file); i++)
+        {
+            char* tmp = remove_commas(buffer);
+
+            char *p = buffer;
+            int j = 0;
+            while (*p) {
+                if (isdigit(*p)) {                              // Upon finding a digit, ...
+                    if(i == 0) {
+                        array[j] = (float)strtol(p, &p, 10);     // Read a number, ...
+                    } else {
+                        array[i*tmp_dim + j] = (float)strtol(p, &p, 10);
+                    }
+                    
+                    if(j > tmp_dim) {
+                        tmp_dim = j;
+                    }
+
+                    j++;
+                } else {                                        // Otherwise, move on to the next character.
+                    p++;
+                }
+            }
+        }
+        fclose(file);
+
+        array = realloc(array, sizeof(float) * i*i);
+        *dim = i;
+
+        return array;
+    }
+    else
+    {
+        perror(filename);
+	return NULL;
+    }
+}
+
+/*
+    Writes matrices into csv files. If integer is set to true, this will print the integer version of the matrix
+*/
+void write_matrix(float* matrix, int no_cells, int dim, char* filename, int integer) {
+    FILE *f = fopen(filename, "w");
+    if (f == NULL)
+    {
+        printf("Error opening file!\n");
+        return;
+    }
+
+    for (int i = 0; i < no_cells; i++) {
+        if(integer) {
+            int tmp = (int)matrix[i];
+            fprintf(f, "%d, ", tmp);
+        } else {
+            fprintf(f, "%f, ", matrix[i]);
+        }
+
+        if ((i+1) % dim == 0) {
+            fprintf(f, "\n");
+        }
+    }
+}
+
 /*
     Obtains LU so that we can check whether A=LU
 */
@@ -50,6 +146,9 @@ void checkResult(size_t no_cells, size_t dim, float* L, float* U) {
     free(result);
 }
 
+/*
+    MPI_BCAST implementation
+*/
 void my_bcast(void* data, int count, MPI_Datatype datatype, int root, MPI_Comm communicator) {
     int world_rank;
     MPI_Comm_rank(communicator, &world_rank);
@@ -95,7 +194,7 @@ void setLU(float* M, float* L, float* U, int dim)
     }
 }
 
-void forw_elimination(float **row, float *pivot_row, size_t dim)
+void calculateRowLU(float **row, float *pivot_row, size_t dim)
 {
     float factor = **row / pivot_row[0];
 
@@ -149,7 +248,7 @@ int main(int argc, char *argv[])
                     float *row = &A[i * dim + main_elem];                   // points to coefficient below A[i][i]...
                     // this coefficient will be used in calculating the factor by which to subtract the current row coefficient so that it turns to zero
                     
-                    forw_elimination(&row, pivot_row, dim - main_elem);
+                    calculateRowLU(&row, pivot_row, dim - main_elem);
                     //printf("data: %f\n", row[0]);
                 }
             }
