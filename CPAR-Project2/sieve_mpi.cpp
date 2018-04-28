@@ -24,12 +24,14 @@ int main(int argc, char* argv[]) {
 
     size_t number_odd_elements = last_number / 2;
 
-    unsigned long size_per_process = number_odd_elements/size;
-    unsigned long blockLow = (rank*number_odd_elements/size)*2 + 1;
-    unsigned long blockHigh = (((rank+1)*number_odd_elements/size) - 1) * 2 + 1;
 	  unsigned long sqrt_last_number = sqrt(last_number);
+    unsigned long size_per_process = number_odd_elements/size;              // divides the array by all processes
 
-    std::vector<bool> sieved_vector(size_per_process, false);   // creates a vector for each process
+    unsigned long lowerBound = (rank*size_per_process)*2 + 1;               // lower bound of the array of proccess with id "rank"
+    unsigned long upperBound = ((rank+1)*number_odd_elements)/size*2 - 1;   // upper bound of the array of proccess with id "rank"
+    // note that elements with index i/2 have an value of [i] being that the reason why both lower and upper bounds are multiplied by 2
+
+    std::vector<bool> sieved_vector(size_per_process, false);               // creates a vector for each process
     MPI_Barrier(MPI_COMM_WORLD);
 
     if (rank == 0) {
@@ -37,55 +39,56 @@ int main(int argc, char* argv[]) {
     }
 
     size_t startBlock;
-    for (size_t k = 3; k <= static_cast<size_t>(sqrt(last_number));) {
-      if (k * k < blockLow) {
-        startBlock = blockLow;
-        if (blockLow % k != 0) {
-          startBlock += -(blockLow % k) + k;
+    for (size_t prime = 3; prime <= sqrt_last_number; ) {
+      if (prime * prime < lowerBound) {
+        startBlock = lowerBound;
+        if (lowerBound % prime != 0) {
+          startBlock += -(lowerBound % prime) + prime;
           if (startBlock % 2 == 0) {
-            startBlock += k;
+            startBlock += prime;
           }
         }
       } else {
-        startBlock = k * k;
+        startBlock = prime * prime;
       }
 
-      for (size_t multiple = startBlock; multiple <= blockHigh; multiple += 2 * k) {
-        sieved_vector[(multiple - blockLow) / 2] = true;
+      for (size_t multiple = startBlock; multiple <= upperBound; multiple += 2 * prime) {
+        sieved_vector[(multiple - lowerBound) / 2] = true;
       }
 
       if (rank == 0) {
-        k += 2;
+        prime += 2;
       }
-      MPI_Bcast(&k, 1, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
+
+      MPI_Bcast(&prime, 1, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
     }
 
     size_t blockPrimes = 0;
-    size_t start_value = blockLow;
-	  std::ofstream fout;
-	  fout.open("primes.csv");
+    size_t start_value = lowerBound;
+
     if (rank == 0) {
-      fout << "2, " << std::endl;
+      std::cout << "2, " << std::endl;
       start_value += 2;
       blockPrimes += 1;
     }
-    for (size_t number = start_value; number <= blockHigh; number += 2) {
-      if (!sieved_vector[(number - blockLow) / 2]) {
-        fout << number << ", ";
+
+    for (size_t number = start_value; number <= upperBound; number += 2) {
+      if (!sieved_vector[(number - lowerBound) / 2]) {
+        std::cout << number << ", ";
         blockPrimes++;
       }
     }
 
-    size_t AllBlocksPrimes = 0;
+    size_t totalPrimes = 0;
 
-    MPI_Reduce(&blockPrimes, &AllBlocksPrimes, 1, MPI_UNSIGNED, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&blockPrimes, &totalPrimes, 1, MPI_UNSIGNED, MPI_SUM, 0, MPI_COMM_WORLD);
     if (rank == 0) {
       end = MPI_Wtime();
-      std::cout << "Primes found: " << AllBlocksPrimes << std::endl;
-      std::cout << (end - start) << std::endl;
+      
+      std::cout << "Primes found: " << totalPrimes << std::endl;
+      std::cout << "Elapsed time: " << end - start << "s" << std::endl;
     }
 
-    fout.close();
     MPI_Finalize();
 
   } else {
