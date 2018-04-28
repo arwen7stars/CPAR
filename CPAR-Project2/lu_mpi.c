@@ -289,8 +289,7 @@ int main(int argc, char *argv[])
 
             printf("\n[LU]\n");
             checkResult(dim*dim, dim, L, U);*/
-
-            printf("mpi: %f s\n", end - start);
+            printf("Elapsed time: %f s\n", end - start);
         }
 
         free(A);

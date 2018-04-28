@@ -10,8 +10,8 @@ void write_primes(std::vector<bool> prime_numbers, unsigned long long last_numbe
 	size_t counter = 1;
 
     fout << 2 << ", ";
-	for(size_t i = 3; i < last_number; i+=2) {
-		if(!prime_numbers[i/2]) {
+	for(size_t i = 3; i < last_number; i+=2) {		// even numbers are ignored (4,6,8,...)
+		if(!prime_numbers[i/2]) {					// prime numbers in this array are the false ones
 			counter++;
 			fout << i << ", ";
 		}
@@ -28,20 +28,16 @@ void write_primes(std::vector<bool> prime_numbers, unsigned long long last_numbe
 	http://en.cppreference.com/w/cpp/container/vector_bool
 */
 void sieve(unsigned long long last_number) {
-	std::vector<bool> prime_numbers(last_number/2, false);
-	int sqrt_last_number = sqrt(last_number);
-	
-	//std::cout << "sqrt(last_number): " << sqrt_last_number << std::endl;
+	std::vector<bool> prime_numbers(last_number/2, false);		// the amount of prime numbers is smaller than the amount of uneven numbers (since there is no prime number that is even except two)
+	unsigned long sqrt_last_number = sqrt(last_number);
 
-	// nesta implementação do algoritmo são ignorados os múltiplos de 2, sendo dados saltos de 2 em 2 números
+	// in this implementation, even numbers are ignored (note that the only number that is prime and even is 2)
 	for (size_t i = 3; i <= sqrt_last_number; i+=2)
-	{
-		if (!prime_numbers[i/2])
-		{
-			//std::cout << std::endl << i << " " << i/2 << std::endl << std::endl;
-			for (size_t j = i*i; j < last_number; j += 2*i)
+	{															
+		if (!prime_numbers[i/2])								// every element with index i/2 corresponds in fact to the number i in the array prime_numbers
+		{						
+			for (size_t j = i*i; j < last_number; j += 2*i)		// goes through all multiples of i that are not even numbers (e.g por i=3 => j=9,15,21...) and crosses them from the list (setting the corresponding index to true in prime_numbers)
 			{
-				//std::cout << "current multiple: " << j << " " << j/2 << " " << j/2/2 << std::endl;
 				prime_numbers[j/2] = true;
 			}
 		}
@@ -67,6 +63,6 @@ int main(int argc, char* argv[]) {
 
 		std::cout << "Elapsed time: "<< real_time << "s" << std::endl;
     } else {
-        std::cout << "usage: "<< argv[0] << " <size>" << std::endl;
+        std::cout << "usage: "<< argv[0] << " <last_number>" << std::endl;
     }
 }
