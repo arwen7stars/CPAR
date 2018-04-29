@@ -8,6 +8,7 @@
 
 int main(int argc, char* argv[]) {
   if (argc == 2) {
+    remove("primes.csv");
     char *matrix_dim = argv[1];
     char *ptr;
 		double start = 0, end = 0;
@@ -66,15 +67,19 @@ int main(int argc, char* argv[]) {
     size_t blockPrimes = 0;
     size_t start_value = lowerBound;
 
+    std::fstream fout;
+    fout.open ("primes.csv", std::fstream::out | std::fstream::app);
+
     if (rank == 0) {
-      std::cout << "2, " << std::endl;
+      fout << "2, ";
       start_value += 2;
       blockPrimes += 1;
     }
 
+    size_t number = start_value;
     for (size_t number = start_value; number <= upperBound; number += 2) {
       if (!sieved_vector[(number - lowerBound) / 2]) {
-        std::cout << number << ", ";
+        fout << number << ", ";
         blockPrimes++;
       }
     }
