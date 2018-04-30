@@ -31,7 +31,7 @@ float** initialize_matrix(int dim, int random) {
         
         for (j = 0; j < dim; j++) {
             if (random) {               // true is 1
-                matrix[i][j] = rand() % 100;
+                matrix[i][j] = rand() % 100 + 1;
             } else {
                 matrix[i][j] = 0;
             }
@@ -152,7 +152,7 @@ void checkResult(float** l, float** u, int dim) {
 */
 void setLU(float** matrix, float** l, float** u, int dim) {
     
-    size_t i, j;
+    int i, j;
     
     #pragma omp parallel for private(j) num_threads(4) schedule(dynamic)
     for (i = 0; i < dim; i++) {
@@ -180,26 +180,25 @@ void setLU(float** matrix, float** l, float** u, int dim) {
     Arguments: a -> original square matrix; dim -> matrix size
     Returns new square matrix which be very easily decomposed into L and U
 */
-float** lu_decomposition(float** a, int dim)
+int lu_decomposition(float** a, int dim)
 {
     int i, j, k;
+    int success = 1;
 
-    #pragma omp parallel for private(j,k) num_threads(4) schedule(dynamic)
     for (i = 0; i < dim; i++) {
+        #pragma omp parallel for num_threads(2) schedule(dynamic)
         for (j = i + 1; j < dim; j++) {
             float factor = a[j][i] / a[i][i];   // factor by which to multiply the equation of row i so that a[j][i] becomes zero
             
-            #pragma omp simd
             for (k = i + 1; k < dim; k++) {     // goes through all coefficients of row j that are above the main diagonal and substracts them by the corresponding coefficient in row i
             // Note: each coefficient corresponds to column k
                 a[j][k] -= factor * a[i][k];
             }
-
             a[j][i] = factor;                   // instead of setting a[j][i] to zero like we do usually in gaussian elimination we keep this value so that we obtain the lower triangular
         }
     }
 
-    return a;
+    return success;
 }
 
 int main(int argc, char* argv[]) {
@@ -209,7 +208,7 @@ int main(int argc, char* argv[]) {
         float** A = initialize_matrix(5, 1);
         write_matrix(A, 5, "first.csv", 1);
         */
-        char* filename = argv[1];
+        /*char* filename = argv[1];
         int dim;
         float** A = read_matrix_file(filename, &dim);
 
@@ -225,7 +224,11 @@ int main(int argc, char* argv[]) {
         //print_matrix(A, dim);
 
         clock_gettime(CLOCK_MONOTONIC, &tmstart);
-        lu_decomposition(A, dim);
+        
+        if (lu_decomposition(A, dim) < 0) {
+            return EXIT_FAILURE;
+        }
+        
         setLU(A, L, U, dim);
         clock_gettime(CLOCK_MONOTONIC, &now);
 
@@ -238,9 +241,9 @@ int main(int argc, char* argv[]) {
         //print_matrix(U, dim);
         //checkResult(L, U, dim);
 
-        printf("Elapsed time: %f s\n", real_time);
+        printf("Elapsed time: %f s\n", real_time);*/
 
-        /*char *matrix_dim = argv[1];
+        char *matrix_dim = argv[1];
         char *ptr;
         struct timespec now, tmstart;
 
@@ -249,7 +252,8 @@ int main(int argc, char* argv[]) {
         int dim = strtol(matrix_dim, &ptr, 10);
 
         if (*ptr) {
-            printf("Conversion error, non-convertible part: %s", ptr);
+            printf("ERROR: Conversion error, non-convertible part: %s", ptr);
+            return EXIT_FAILURE;
         }
 
         float** A = initialize_matrix(dim, 1);
@@ -267,14 +271,13 @@ int main(int argc, char* argv[]) {
 
         float real_time = (double)((now.tv_sec+now.tv_nsec*1e-9) - (double)(tmstart.tv_sec+tmstart.tv_nsec*1e-9));
 
-        //write_matrix(L, dim, "L.csv");
-        //write_matrix(U, dim, "U.csv");
+        //write_matrix(L, dim, "L.csv", 0);
+        //write_matrix(U, dim, "U.csv", 0);
         //print_matrix(L, dim);
         //print_matrix(U, dim);
-
         //checkResult(L, U, dim);
 
-        printf("Elapsed time: %f s\n", real_time);*/
+        printf("Elapsed time: %f s\n", real_time);
     } else {
         printf("usage: %s <filename>\n", argv[0]);
         return EXIT_FAILURE;

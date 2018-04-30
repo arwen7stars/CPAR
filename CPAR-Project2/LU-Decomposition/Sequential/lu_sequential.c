@@ -30,7 +30,7 @@ float** initialize_matrix(int dim, int random) {
         
         for (j = 0; j < dim; j++) {
             if (random) {               // true is 1
-                matrix[i][j] = rand() % 100;
+                matrix[i][j] = rand() % 100 + 1;
             } else {
                 matrix[i][j] = 0;
             }
@@ -178,7 +178,7 @@ void setLU(float** matrix, float** l, float** u, int dim) {
     Arguments: a -> original square matrix; dim -> matrix size
     Returns new square matrix which be very easily decomposed into L and U
 */
-float** lu_decomposition(float** a, int dim)
+int lu_decomposition(float** a, int dim)
 {
     int i, j, k;
     for (i = 0; i < dim; i++) {
@@ -194,7 +194,7 @@ float** lu_decomposition(float** a, int dim)
         }
     }
 
-    return a;
+    return 0;
 }
 
 int main(int argc, char* argv[]) {
@@ -204,7 +204,7 @@ int main(int argc, char* argv[]) {
         float** A = initialize_matrix(5, 1);
         write_matrix(A, 5, "first.csv", 1);
         */
-        char* filename = argv[1];
+        /*char* filename = argv[1];
         int dim;
         float** A = read_matrix_file(filename, &dim);
 
@@ -220,7 +220,11 @@ int main(int argc, char* argv[]) {
         //print_matrix(A, dim);
 
         clock_gettime(CLOCK_MONOTONIC, &tmstart);
-        lu_decomposition(A, dim);
+        
+        if (lu_decomposition(A, dim) < 0) {
+            return EXIT_FAILURE;
+        }
+        
         setLU(A, L, U, dim);
         clock_gettime(CLOCK_MONOTONIC, &now);
 
@@ -233,9 +237,9 @@ int main(int argc, char* argv[]) {
         //print_matrix(U, dim);
         //checkResult(L, U, dim);
 
-        printf("Elapsed time: %f s\n", real_time);
+        printf("Elapsed time: %f s\n", real_time);*/
 
-        /*char *matrix_dim = argv[1];
+        char *matrix_dim = argv[1];
         char *ptr;
         struct timespec now, tmstart;
 
@@ -244,7 +248,8 @@ int main(int argc, char* argv[]) {
         int dim = strtol(matrix_dim, &ptr, 10);
 
         if (*ptr) {
-            printf("Conversion error, non-convertible part: %s", ptr);
+            printf("ERROR: Conversion error, non-convertible part: %s", ptr);
+            return EXIT_FAILURE;
         }
 
         float** A = initialize_matrix(dim, 1);
@@ -269,7 +274,7 @@ int main(int argc, char* argv[]) {
 
         //checkResult(L, U, dim);
 
-        printf("Elapsed time: %f s\n", real_time);*/
+        printf("Elapsed time: %f s\n", real_time);
     } else {
         printf("usage: %s <filename>\n", argv[0]);
         return EXIT_FAILURE;

@@ -1,0 +1,8 @@
+How to compile "lu_sequential.c":
+gcc -O3 lu_sequential.c -o lu_sequential.out
+
+How to run "lu_sequential.out":
+./lu_sequential.out <matrix_size>
+
+Example:
+./lu_sequential.out 1000

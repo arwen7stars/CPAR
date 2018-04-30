@@ -1,0 +1,7 @@
+Script started on 2018-04-30 00:09:46+0100
+]0;arwen7stars@arwen7stars-X555LD: ~/Desktop/CPAR/CPAR-Project2/LU-Decomposition/Sequential[01;32marwen7stars@arwen7stars-X555LD[00m:[01;34m~/Desktop/CPAR/CPAR-Project2/LU-Decomposition/Sequuential[00m$ exit./lu_sequential.out 5000[1P0006000
+Elapsed time: 35.160061 s
+]0;arwen7stars@arwen7stars-X555LD: ~/Desktop/CPAR/CPAR-Project2/LU-Decomposition/Sequential[01;32marwen7stars@arwen7stars-X555LD[00m:[01;34m~/Desktop/CPAR/CPAR-Project2/LU-Decomposition/Sequuential[00m$ exit
+exit
+
+Script done on 2018-04-30 00:10:28+0100

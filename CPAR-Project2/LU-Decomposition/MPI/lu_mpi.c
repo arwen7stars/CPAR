@@ -147,31 +147,6 @@ void checkResult(size_t no_cells, size_t dim, float* L, float* U) {
 }
 
 /*
-    MPI_BCAST implementation
-*/
-void my_bcast(void* data, int count, MPI_Datatype datatype, int root, MPI_Comm communicator) {
-    int world_rank;
-    MPI_Comm_rank(communicator, &world_rank);
-    int world_size;
-    MPI_Comm_size(communicator, &world_size);
-
-    if (world_rank == root) {
-        // If we are the root process, send our data to everyone
-        int i;
-        for (i = 0; i < world_size; i++) {
-            if (i != world_rank) {
-                MPI_Send(data, count, datatype, i, 0, communicator);
-                //printf("Sent %f to process %d from process %d.\n", data[0], i,world_rank);
-            }
-        }
-    } else {
-        // If we are a receiver process, receive the data from the root
-        MPI_Recv(data, count, datatype, root, 0, communicator, MPI_STATUS_IGNORE);
-        //printf("Received %f from process %d at process %d.\n",data[0], root,world_rank);
-    }
-}
-
-/*
     Given the matrix obtained by LU decomposition, this function sets the L and U arrays properly
 */
 void setLU(float* M, float* L, float* U, int dim)
@@ -194,8 +169,13 @@ void setLU(float* M, float* L, float* U, int dim)
     }
 }
 
-void calculateRowLU(float **row, float *pivot_row, size_t dim)
+int calculateRowLU(float **row, float *pivot_row, size_t dim)
 {
+    if(pivot_row[0] == 0) {
+        perror("ERROR: Null main diagonal matrix member.\n");
+        return -1;
+    }
+
     float factor = **row / pivot_row[0];
 
     int i;
@@ -204,6 +184,7 @@ void calculateRowLU(float **row, float *pivot_row, size_t dim)
     }
     **row = factor;                                         // instead of setting this coefficient to zero like we would do if were using the usual gaussian method we set this coefficient to factor
     // NOTE: **row points to A[i][main_elem], being i the same as in luDecomposition
+    return 0;
 }
 
 int main(int argc, char *argv[])
@@ -211,7 +192,7 @@ int main(int argc, char *argv[])
    if (argc == 2) {
         srand(time(NULL));
         
-        char* filename = argv[1];
+        /*char* filename = argv[1];
         int dim;
         float* A = read_matrix_file(filename, &dim);
 
@@ -220,9 +201,9 @@ int main(int argc, char *argv[])
 	    }
 
         float *L = initialize_matrix(dim * dim, dim, 0);
-        float *U = initialize_matrix(dim * dim, dim, 0);
+        float *U = initialize_matrix(dim * dim, dim, 0);*/
 
-        /*char *matrix_dim = argv[1];
+        char *matrix_dim = argv[1];
         char *ptr;
 
         srand(time(NULL));
@@ -230,13 +211,14 @@ int main(int argc, char *argv[])
         int dim = strtol(matrix_dim, &ptr, 10);
 
         if (*ptr){
-            printf("Conversion error, non-convertible part: %s", ptr);
+            printf("ERROR: Conversion error, non-convertible part: %s", ptr);
+            return EXIT_FAILURE;
         }
 
         float *A = initialize_matrix(dim * dim, dim, 1);
         float *L = initialize_matrix(dim * dim, dim, 0);
         float *U = initialize_matrix(dim * dim, dim, 0);
-        */
+        
 
         const int root_process = 0;
         int size, rank;
@@ -262,33 +244,38 @@ int main(int argc, char *argv[])
                     float *row = &A[i * dim + main_elem];                   // points to coefficient below A[i][i]...
                     // this coefficient will be used in calculating the factor by which to subtract the current row coefficient so that it turns to zero
                     
-                    calculateRowLU(&row, pivot_row, dim - main_elem);
+                    if (calculateRowLU(&row, pivot_row, dim - main_elem) < 0) {
+                        return EXIT_FAILURE;
+                    }
                     //printf("data: %f\n", row[0]);
                 }
             }
 
             for (i = main_elem + 1; i < dim; i++) {
                 float *row = &A[i * dim + main_elem];                                   // pointer to row to be sent to all processes or to be received
-                my_bcast(row, dim - main_elem, MPI_FLOAT, i % size, MPI_COMM_WORLD);    // keeps data synchronized in all processes
+                MPI_Bcast(row, dim - main_elem, MPI_FLOAT, i % size, MPI_COMM_WORLD);   // keeps data synchronized in all processes
             }
             MPI_Barrier(MPI_COMM_WORLD);
         }
 
-        double end = MPI_Wtime();
         if(rank == root_process) {
+            double end = MPI_Wtime();
             setLU(A, L, U, dim);
 
             write_matrix(L, dim*dim, dim, "L.csv", 0);
             write_matrix(U, dim*dim, dim, "U.csv", 0);
 
-            /*printf("\n[L]\n");
+            /*
+            printf("\n[L]\n");
             print_matrix(L, dim * dim, dim);
 
             printf("\n[U]\n");
             print_matrix(U, dim * dim, dim);
 
             printf("\n[LU]\n");
-            checkResult(dim*dim, dim, L, U);*/
+            checkResult(dim*dim, dim, L, U);
+            */
+            
             printf("Elapsed time: %f s\n", end - start);
         }
 

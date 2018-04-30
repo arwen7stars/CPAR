@@ -1,0 +1,6 @@
+Script started on 2018-04-29 16:17:51+0100
+
+mpirun -np 2 lu_mpi.out 6000
+Elapsed time: 106.956505 s
+
+Script done on 2018-04-29 16:20:39+0100
