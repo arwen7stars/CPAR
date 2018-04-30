@@ -1,0 +1,7 @@
+Script started on 2018-04-30 09:23:34+0100
+]0;arwen7stars@arwen7stars-X555LD: ~/Desktop/CPAR/CPAR-Project2/LU-Decomposition/OpenMP[01;32marwen7stars@arwen7stars-X555LD[00m:[01;34m~/Desktop/CPAR/CPAR-Project2/LU-Decomposition/OpennMP[00m$ git pushcommit -m "I am so tired..."[C[C[C[C[C[C[C[C[Cpush[K[C[C[C[C[C[K./lu_openmp.out 1000
+Elapsed time: 0.070679 s
+]0;arwen7stars@arwen7stars-X555LD: ~/Desktop/CPAR/CPAR-Project2/LU-Decomposition/OpenMP[01;32marwen7stars@arwen7stars-X555LD[00m:[01;34m~/Desktop/CPAR/CPAR-Project2/LU-Decomposition/OpennMP[00m$ exit
+exit
+
+Script done on 2018-04-30 09:23:45+0100

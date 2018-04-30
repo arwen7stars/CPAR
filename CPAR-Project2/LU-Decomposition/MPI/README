@@ -1,0 +1,8 @@
+How to compile "lu_mpi.c":
+mpicc -O3 lu_mpi.c -o lu_mpi.out
+
+How to run "lu_mpi.out":
+mpirun -np <no_processes> lu_mpi.out <matrix_size>
+
+Example:
+mpirun -np 2 lu_mpi.out 1000
