@@ -1,0 +1,6 @@
+Script started on 2018-04-30 16:06:04+0100
+
+./lu_openmp.out A_2000x2000.csv 3
+Elapsed time: 1.075146 s
+
+Script done on 2018-04-30 16:06:19+0100

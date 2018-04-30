@@ -1,0 +1,7 @@
+Script started on 2018-04-30 16:50:45+0100
+
+./sieve_openmp.out 600000000 5
+Prime numbers found: 31324703
+Elapsed time: 9.53849s
+
+Script done on 2018-04-30 16:51:09+0100

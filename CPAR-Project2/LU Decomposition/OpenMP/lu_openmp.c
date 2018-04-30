@@ -131,7 +131,7 @@ void checkResult(float** l, float** u, int dim) {
 /*
     Given the matrix obtained by lu_decomposition, this function sets the L and U arrays properly
 */
-void setLU(float** matrix, float** l, float** u, int dim, int no_threads) {
+void setLU(float** matrix, float** l, float** u, int dim) {
     
     int i, j;
     
@@ -237,7 +237,7 @@ int main(int argc, char* argv[]) {
         clock_gettime(CLOCK_MONOTONIC, &tmstart);
 
         lu_decomposition(A, dim, no_threads);
-        setLU(A, L, U, dim, no_threads);
+        setLU(A, L, U, dim);
 
         clock_gettime(CLOCK_MONOTONIC, &now);
 
