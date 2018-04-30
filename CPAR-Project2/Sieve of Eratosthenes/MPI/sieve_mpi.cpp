@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <fstream>
+#include <stdlib.h>
 
 #include <mpi.h>
 
