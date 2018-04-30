@@ -1,0 +1,7 @@
+Script started on 2018-04-30 15:32:08+0100
+
+./sieve_sequential.out 300000000
+Prime numbers found: 16252325
+Elapsed time: 3.918s
+
+Script done on 2018-04-30 15:32:17+0100
