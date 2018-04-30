@@ -1,0 +1,6 @@
+Script started on 2018-04-30 00:08:59+0100
+
+./lu_sequential.out 4000
+Elapsed time: 10.131221 s
+
+Script done on 2018-04-30 00:09:13+0100
