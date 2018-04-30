@@ -41,21 +41,6 @@ float** initialize_matrix(int dim, int random) {
 }
 
 /*
-    Auxiliar function to read_matrix_file
-*/
-char* remove_commas(char* str) {
-    char *r, *w;
-    for (w = r = str; *r; r++) {
-        if (*r != ',') {
-            *w++ = *r;
-        }
-    }
-    *w = '\0';
-
-    return str;
-}
-
-/*
     Reads the matrix that will be used in the LU decomposition algorithm
 */
 float** read_matrix_file(char* filename, int* dim) {
@@ -70,17 +55,12 @@ float** read_matrix_file(char* filename, int* dim) {
         
         for (i = 0; fgets(buffer, sizeof buffer, file); i++)
         {
-            char* tmp = remove_commas(buffer);
-
-            char *p = buffer;
+            char *tok, *saved;
             int j = 0;
-            while (*p) {
-                if (isdigit(*p)) {                              // Upon finding a digit, ...
-                    array[i][j] = (float)strtol(p, &p, 10);     // Read a number, ...
-                    j++;
-                } else {                                        // Otherwise, move on to the next character.
-                    p++;
-                }
+            for (tok = strtok_r(buffer, " ,\n", &saved); tok; tok = strtok_r(NULL, " ,\n", &saved))
+            {
+                array[i][j] = atof(tok);
+                j++;
             }
         }
         fclose(file);
@@ -93,14 +73,14 @@ float** read_matrix_file(char* filename, int* dim) {
     else
     {
         perror(filename);
-	return NULL;
+	    return NULL;
     }
 }
 
 /*
-    Writes matrices into csv files. If integer is set to true, this will print the integer version of the matrix
+    Writes matrices into csv files
 */
-void write_matrix(float** matrix, int dim, char* filename, int integer) {
+void write_matrix(float** matrix, int dim, char* filename) {
     FILE *f = fopen(filename, "w");
     if (f == NULL)
     {
@@ -110,20 +90,7 @@ void write_matrix(float** matrix, int dim, char* filename, int integer) {
 
     for (int i = 0; i < dim; i++) {
         for (int j = 0; j < dim; j++){
-            if(integer) {
-                int tmp = (int)matrix[i][j];
-                if(j-1 == dim) {
-                    fprintf(f, "%d", tmp);
-                } else {
-                    fprintf(f, "%d, ", tmp);
-                }
-            } else {
-                if(j-1 == dim) {
-                    fprintf(f, "%f", matrix[i][j]);
-                } else {
-                    fprintf(f, "%f, ", matrix[i][j]);
-                }
-            }
+            fprintf(f, "%f,", matrix[i][j]);
         }
         fprintf(f, "\n");
     }
@@ -201,10 +168,10 @@ int main(int argc, char* argv[]) {
     if (argc == 2) {
         srand(time(NULL));
         
-        /*
-        float** A = initialize_matrix(matrix_size, 1);
-        write_matrix(A, matrix_size, "example.csv", 1);
-        */
+        
+        /*float** A = initialize_matrix(5, 1);
+        write_matrix(A, 5, "example.csv");*/
+        
 
         /*char *matrix_dim = argv[1];
         char *ptr;
@@ -232,8 +199,8 @@ int main(int argc, char* argv[]) {
         float** L = initialize_matrix(dim, 0);
         float** U = initialize_matrix(dim, 0);
 
-        /*printf("[A]\n");
-        print_matrix(A, dim);*/
+        //printf("[A]\n");
+        //print_matrix(A, dim);
 
         clock_gettime(CLOCK_MONOTONIC, &tmstart);
 
@@ -244,8 +211,8 @@ int main(int argc, char* argv[]) {
 
         float real_time = (double)((now.tv_sec+now.tv_nsec*1e-9) - (double)(tmstart.tv_sec+tmstart.tv_nsec*1e-9));
 
-        write_matrix(L, dim, "L.csv", 0);
-        write_matrix(U, dim, "U.csv", 0);
+        write_matrix(L, dim, "L.csv");
+        write_matrix(U, dim, "U.csv");
         
         /*printf("\n[L]\n");
         print_matrix(L, dim);

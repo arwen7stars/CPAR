@@ -2,7 +2,7 @@ How to compile "lu_openmp.c":
 gcc -O3 lu_openmp.c -o lu_openmp.out -fopenmp
 
 How to run "lu_openmp.out":
-./lu_openmp.out <matrix_size> <no_threads>
+./lu_openmp.out <filename> <no_threads>
 
 Example:
-./lu_openmp.out 1000 2
+./lu_openmp.out example.csv 2

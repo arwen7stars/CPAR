@@ -36,22 +36,6 @@ float* initialize_matrix(size_t no_cells, size_t dim, int random)
     return matrix;
 }
 
-
-/*
-    Auxiliar function to read_matrix_file
-*/
-char* remove_commas(char* str) {
-    char *r, *w;
-    for (w = r = str; *r; r++) {
-        if (*r != ',') {
-            *w++ = *r;
-        }
-    }
-    *w = '\0';
-
-    return str;
-}
-
 /*
     Reads the matrix that will be used in the LU decomposition algorithm
 */
@@ -68,24 +52,19 @@ float* read_matrix_file(char* filename, int* dim) {
         int tmp_dim = -1;
         for (i = 0; fgets(buffer, sizeof buffer, file); i++)
         {
-            char* tmp = remove_commas(buffer);
-
-            char *p = buffer;
+            char *tok, *saved;
             int j = 0;
-            while (*p) {
-                if (isdigit(*p)) {                              // Upon finding a digit, ...
-                    if(i == 0) {
-                        array[j] = (float)strtol(p, &p, 10);     // Read a number, ...
-                    } else {
-                        array[i*tmp_dim + j] = (float)strtol(p, &p, 10);
-                    }
+            for (tok = strtok_r(buffer, " ,\n", &saved); tok; tok = strtok_r(NULL, " ,\n", &saved))
+            {
+                if(i == 0) {
+                    array[j] = atof(tok);
+                } else {
+                    array[i*tmp_dim + j] = atof(tok);
+                }
 
-                    j++;                    
-                    if(j > tmp_dim) {
-                        tmp_dim = j;
-                    }
-                } else {                                        // Otherwise, move on to the next character.
-                    p++;
+                j++;                    
+                if(j > tmp_dim) {
+                    tmp_dim = j;
                 }
             }
         }
@@ -106,7 +85,7 @@ float* read_matrix_file(char* filename, int* dim) {
 /*
     Writes matrices into csv files. If integer is set to true, this will print the integer version of the matrix
 */
-void write_matrix(float* matrix, int no_cells, int dim, char* filename, int integer) {
+void write_matrix(float* matrix, int no_cells, int dim, char* filename) {
     FILE *f = fopen(filename, "w");
     if (f == NULL)
     {
@@ -115,12 +94,7 @@ void write_matrix(float* matrix, int no_cells, int dim, char* filename, int inte
     }
 
     for (int i = 0; i < no_cells; i++) {
-        if(integer) {
-            int tmp = (int)matrix[i];
-            fprintf(f, "%d, ", tmp);
-        } else {
-            fprintf(f, "%f, ", matrix[i]);
-        }
+        fprintf(f, "%f, ", matrix[i]);
 
         if ((i+1) % dim == 0) {
             fprintf(f, "\n");
@@ -257,8 +231,8 @@ int main(int argc, char *argv[])
             double end = MPI_Wtime();
             setLU(A, L, U, dim);
 
-            write_matrix(L, dim*dim, dim, "L.csv", 0);
-            write_matrix(U, dim*dim, dim, "U.csv", 0);
+            write_matrix(L, dim*dim, dim, "L.csv");
+            write_matrix(U, dim*dim, dim, "U.csv");
             
             /*printf("\n[L]\n");
             print_matrix(L, dim * dim, dim);
