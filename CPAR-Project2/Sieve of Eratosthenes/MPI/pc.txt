@@ -1,0 +1,25 @@
+Script started on Seg 30 Abr 2018 18:58:09 WEST
+]0;up201404493@I00CS0302: /usr/users2/mieic2014/up201404493/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPIup201404493@I00CS0302:~/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPI$ cat /etc/hoosts[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cssh-keygen -t dsa[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cudo adduser mpiuser[K[K[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K^C
+]0;up201404493@I00CS0302: /usr/users2/mieic2014/up201404493/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPIup201404493@I00CS0302:~/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPI$ mpirun -np  2 sieve_mpi.out 100000000
+Prime numbers found: 5761455
+Elapsed time: 2.59153s
+]0;up201404493@I00CS0302: /usr/users2/mieic2014/up201404493/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPIup201404493@I00CS0302:~/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPI$ mpirun -np  2 sieve_mpi.out 100000000[1P[1@3
+Prime numbers found: 5761455
+Elapsed time: 2.5662s
+]0;up201404493@I00CS0302: /usr/users2/mieic2014/up201404493/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPIup201404493@I00CS0302:~/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPI$ mpirun -np  3 sieve_mpi.out 100000000[1P[1@4
+Prime numbers found: 5761455
+Elapsed time: 2.82978s
+]0;up201404493@I00CS0302: /usr/users2/mieic2014/up201404493/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPIup201404493@I00CS0302:~/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPI$ mpirun -np  4 sieve_mpi.out 100000000[1P[1@5
+Prime numbers found: 5761455
+Elapsed time: 2.70552s
+]0;up201404493@I00CS0302: /usr/users2/mieic2014/up201404493/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPIup201404493@I00CS0302:~/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPI$ mpirun -np  5 sieve_mpi.out 100000000[1P[1@6
+Prime numbers found: 5761455
+Elapsed time: 2.70667s
+]0;up201404493@I00CS0302: /usr/users2/mieic2014/up201404493/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPIup201404493@I00CS0302:~/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPI$ cdd[K --[K[K..[K[K[K[K[Kmpirun -np  6 sieve_mpi.out 100000000[1P[1@1
+Prime numbers found: 5761455
+Elapsed time: 0.720125s
+]0;up201404493@I00CS0302: /usr/users2/mieic2014/up201404493/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPIup201404493@I00CS0302:~/CPAR/CPAR-Project2/Sieve of Eratosthenes/MPI$ exit
+exit
+
+Script done on Seg 30 Abr 2018 18:59:58 WEST
