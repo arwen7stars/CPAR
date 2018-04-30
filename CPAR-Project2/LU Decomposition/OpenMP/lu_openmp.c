@@ -204,6 +204,7 @@ int lu_decomposition(float** a, int dim, int no_threads)
 int main(int argc, char* argv[]) {
     if (argc == 3) {
         srand(time(NULL));
+        struct timespec now, tmstart;
 
         /*float** A = initialize_matrix(matrix_size, 1);
         write_matrix(A, matrix_size, "example.csv", 1);*/
@@ -212,9 +213,6 @@ int main(int argc, char* argv[]) {
 	    char *nthreads = argv[2];
         char *ptr_dim;
 	    char *ptr_nt;
-        struct timespec now, tmstart;
-
-        srand(time(NULL));
 
         int dim = strtol(matrix_dim, &ptr_dim, 10);
 	    int no_threads = strtol(nthreads, &ptr_nt, 10);
@@ -242,9 +240,6 @@ int main(int argc, char* argv[]) {
 	        return EXIT_FAILURE;	
 	    }
 
-        struct timespec now, tmstart;
-
-        srand(time(NULL));
         int no_threads = strtol(nthreads, &ptr, 10);
 
         if (*ptr) {
