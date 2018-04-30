@@ -1,0 +1,8 @@
+How to compile "sieve_mpi.cpp":
+mpic++ -O3 sieve_mpi.cpp -o sieve_mpi.out
+
+How to run "sieve_mpi.out":
+mpirun -np <no_processes> sieve_mpi.out <last_number>
+
+Example:
+mpirun -np 2 sieve_mpi.out 100000000

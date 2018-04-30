@@ -1,0 +1,8 @@
+How to compile "sieve_openmp.cpp":
+g++ -O3 sieve_openmp.cpp -o sieve_openmp.out -fopenmp
+
+How to run "sieve_openmp.out":
+./sieve_openmp.out <last_number> <no_threads>
+
+Example:
+./sieve_openmp.out 100000000 2

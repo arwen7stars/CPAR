@@ -1,6 +1,0 @@
-Script started on 2018-04-30 09:27:36+0100
-
-./lu_openmp.out 6000
-Elapsed time: 31.107924 s
-
-Script done on 2018-04-30 09:28:15+0100

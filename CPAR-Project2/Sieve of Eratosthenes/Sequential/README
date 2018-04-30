@@ -1,0 +1,8 @@
+How to compile "sieve_sequential.cpp":
+g++ -O3 sieve_sequential.cpp -o sieve_sequential.out
+
+How to run "sieve_sequential.out":
+./sieve_sequential.out <last_number>
+
+Example:
+./sieve_sequential.out 100000000
