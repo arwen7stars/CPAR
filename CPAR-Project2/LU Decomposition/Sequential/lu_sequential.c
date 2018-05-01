@@ -168,11 +168,9 @@ int main(int argc, char* argv[]) {
     if (argc == 2) {
         srand(time(NULL));
         
+        /*float** A = initialize_matrix(10, 1);
+        write_matrix(A, 10, "example.csv");*/
         
-        /*float** A = initialize_matrix(5, 1);
-        write_matrix(A, 5, "example.csv");*/
-        
-
         /*char *matrix_dim = argv[1];
         char *ptr;
 

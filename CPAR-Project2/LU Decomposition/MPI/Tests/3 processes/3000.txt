@@ -1,0 +1,6 @@
+Script started on 2018-05-01 13:18:40+0100
+
+mpirun -np 3 --oversubscribe lu_mpi.out A_3000x3000.csv
+Elapsed time: 68.137936 s
+
+Script done on 2018-05-01 13:20:15+0100

@@ -1,5 +1,9 @@
 Script started on Seg 30 Abr 2018 18:58:09 WEST
 
+mpirun -np 1 sieve_mpi.out 100000000
+Prime numbers found: 5761455
+Elapsed time: 0.720125s
+
 mpirun -np 2 sieve_mpi.out 100000000
 Prime numbers found: 5761455
 Elapsed time: 2.59153s
@@ -19,9 +23,5 @@ Elapsed time: 2.70552s
 mpirun -np 6 sieve_mpi.out 100000000
 Prime numbers found: 5761455
 Elapsed time: 2.70667s
-
-mpirun -np 1 sieve_mpi.out 100000000
-Prime numbers found: 5761455
-Elapsed time: 0.720125s
 
 Script done on Seg 30 Abr 2018 18:59:58 WEST
