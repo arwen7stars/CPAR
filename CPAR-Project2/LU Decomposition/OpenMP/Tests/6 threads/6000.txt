@@ -1,6 +1,0 @@
-Script started on 2018-04-30 18:18:52+0100
-
-./lu_openmp.out A_6000x6000.csv 6
-Elapsed time: 34.032497 s
-
-Script done on 2018-04-30 18:20:00+0100

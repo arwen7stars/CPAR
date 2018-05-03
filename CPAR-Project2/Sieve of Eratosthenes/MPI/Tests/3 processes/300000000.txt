@@ -1,7 +1,0 @@
-Script started on 2018-05-01 13:54:31+0100
-
-mpirun -np 3 --oversubscribe sieve_mpi.out 300000000
-Prime numbers found: 16252325
-Elapsed time: 4.02293s
-
-Script done on 2018-05-01 13:55:17+0100

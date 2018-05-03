@@ -1,6 +1,0 @@
-Script started on 2018-05-01 12:57:33+0100
-
-mpirun -np 1 lu_mpi.out A_3000x3000.csv
-Elapsed time: 4.306620 s
-
-Script done on 2018-05-01 12:57:51+0100

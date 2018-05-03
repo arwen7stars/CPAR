@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
         for (main_elem = 0; main_elem < dim-1; main_elem++) {
             float *pivot_row = &A[main_elem * dim + main_elem];             // points to element of pivot row that belongs to the main diagonal
             
-            for (i = main_elem + 1; i < dim;) {                         // goes through all coefficients of pivot column below A[i][i]
+            for (i = main_elem + 1; i < dim;) {                             // goes through all coefficients of pivot column below A[i][i]
                 if (i % size == rank) {                                     // guarantees that the work is properly divided by all processes
                     float *row = &A[i * dim + main_elem];                   // points to coefficient below A[i][i]...
                     // this coefficient will be used in calculating the factor by which to subtract the current row coefficient so that it turns to zero
@@ -214,6 +214,7 @@ int main(int argc, char *argv[])
                     if (calculateRowLU(&row, pivot_row, dim - main_elem) < 0) {
                         return EXIT_FAILURE;
                     }
+                    
                     i += size;
                 } else {
                     i++;
@@ -224,7 +225,6 @@ int main(int argc, char *argv[])
                 float *row = &A[i * dim + main_elem];                                   // pointer to row to be sent to all processes or to be received
                 MPI_Bcast(row, dim - main_elem, MPI_FLOAT, i % size, MPI_COMM_WORLD);   // keeps data synchronized in all processes
             }
-            //MPI_Barrier(MPI_COMM_WORLD);
         }
 
         if(rank == root_process) {
